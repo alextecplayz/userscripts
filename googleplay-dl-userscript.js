@@ -9,8 +9,8 @@
 // @grant        none
 // @run-at        document-end
 // @license        BSD
-// @homepageURL    https://github.com/alextecplayz/googleplay-dl-userscript
-// @supportURL     https://github.com/alextecplayz/googleplay-dl-userscript/issues
+// @homepageURL    https://github.com/alextecplayz/userscripts
+// @supportURL     https://github.com/alextecplayz/userscripts/issues
 // ==/UserScript==
 
 setTimeout(function() {
