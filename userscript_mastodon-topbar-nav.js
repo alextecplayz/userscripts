@@ -351,12 +351,12 @@
                 if (composeForm) {
                     if (composeForm.style.display === "block") {
                         composeForm.style.display = "none";
+                    } else {
+                        composeForm.style.display = "block";
                         window.scrollTo({
                             top: 0,
                             behavior: "smooth"
                         });
-                    } else {
-                        composeForm.style.display = "block";
                     }
                 }
             });
