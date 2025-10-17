@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Download APK from Google Play
-// @namespace    https://alextecplayz.github.io
+// @namespace    https://alextecplayz.com
 // @version      2023-01-18
 // @description  Adds a 'Download APK' button to an app's Google Play page, next to the Install button, that also has the Install button's CSS styling. The button redirects to APKMirror, searching for the app using the appID. Works with Tampermonkey and Bromite
 // @author       AlexTECPlayz
@@ -8,7 +8,7 @@
 // @match      http://play.google.com/store/apps/details?id=*
 // @grant        none
 // @run-at        document-end
-// @license        BSD
+// @license        MIT
 // @homepageURL    https://github.com/alextecplayz/userscripts
 // @supportURL     https://github.com/alextecplayz/userscripts/issues
 // ==/UserScript==

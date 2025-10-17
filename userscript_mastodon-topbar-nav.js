@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Mastodon top bar navigation
-// @namespace    github.com/openstyles/stylus
+// @namespace    https://alextecplayz.com
 // @version      1.0.0
 // @description  Top bar navigation for Mastodon in non-advanced mode. Feed is wider. UI is square.
 // @author       AlexTECPlayz
@@ -91,6 +91,9 @@
 // @match        *://*campaign.openworlds.info/*
 // @match        *://*oldbytes.space/*
 // @run-at      document-end
+// @license        MIT
+// @homepageURL    https://github.com/alextecplayz/userscripts
+// @supportURL     https://github.com/alextecplayz/userscripts/issues
 // ==/UserScript==
 
 (function() {
