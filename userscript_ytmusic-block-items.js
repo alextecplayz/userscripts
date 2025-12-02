@@ -1,16 +1,21 @@
 // ==UserScript==
 // @name			YTM Hide channels, albums and songs
 // @namespace		https://alextecplayz.com
-// @version			2025-10-16
+// @version			2025-11-30
 // @description		Adds a few buttons and an interface to hide and manage hidden items. Also comes with a bunch of channels and content that is hidden by default, including AI slop.
 // @author			AlexTECPlayz
 // @match			https://music.youtube.com/*
 // @icon			https://music.youtube.com/img/favicon_144.png
-// @grant			none
+// @grant			GM_setValue
+// @Grant			GM.setValue
+// @grant			GM_getValue
+// @grant			GM.getValue
 // @run-at			document-end
 // @license			MIT
 // @homepageURL		https://github.com/alextecplayz/userscripts
 // @supportURL		https://github.com/alextecplayz/userscripts/issues
+// @downloadURL		https://raw.githubusercontent.com/alextecplayz/userscripts/refs/heads/main/userscript_ytmusic-block-items.js
+// @updateURL		https://raw.githubusercontent.com/alextecplayz/userscripts/refs/heads/main/userscript_ytmusic-block-items.js
 // ==/UserScript==
 
 (function() {
@@ -129,21 +134,48 @@
 		const sidebar = settingsRoot.querySelector('tp-yt-paper-listbox.category-menu');
 		if (!sidebar) return;
 		// Create sidebar button for YTM Hide
-		const tabItemOuter = document.createElement('tp-yt-paper-item');
-		tabItemOuter.className = 'category-menu-item style-scope ytmusic-settings-page';
-		tabItemOuter.setAttribute('style-target', 'host');
-		tabItemOuter.setAttribute('role', 'option');
-		tabItemOuter.setAttribute('tabindex', '-1');
-		tabItemOuter.setAttribute('aria-disabled', 'false');
-		tabItemOuter.setAttribute('aria-selected', 'false');
-		const tabItem = document.createElement('div');
-		const titleSpan = document.createElement('p');
-		titleSpan.className = 'title style-scope ytmusic-settings-page';
-		titleSpan.style.setProperty('color', 'var(--ctp-text)', 'important'); // this is for catppuccin
-		titleSpan.textContent = 'YTM Hide';
-		tabItem.appendChild(titleSpan);
-		tabItemOuter.appendChild(tabItem);
-		sidebar.appendChild(tabItemOuter);
+		if (!sidebar.querySelector('.ytm-hide-sidebar-item')) {
+			const tabItemOuter = document.createElement('tp-yt-paper-item');
+			tabItemOuter.className = 'category-menu-item style-scope ytmusic-settings-page ytm-hide-sidebar-item';
+			tabItemOuter.setAttribute('style-target', 'host');
+			tabItemOuter.setAttribute('role', 'option');
+			tabItemOuter.setAttribute('tabindex', '-1');
+			tabItemOuter.setAttribute('aria-disabled', 'false');
+			tabItemOuter.setAttribute('aria-selected', 'false');
+			tabItemOuter.id ='ytm-hide-sidebar-button';
+			const tabItem = document.createElement('div');
+			const titleSpan = document.createElement('p');
+			titleSpan.className = 'title style-scope ytmusic-settings-page';
+			titleSpan.style.setProperty('color', 'var(--ctp-text)', 'important'); // this is for catppuccin
+			titleSpan.textContent = 'YTM Hide';
+			tabItem.appendChild(titleSpan);
+			tabItemOuter.appendChild(tabItem);
+			sidebar.appendChild(tabItemOuter);
+			// sidebar button listener
+			tabItemOuter.addEventListener('click', () => {
+				// unselect other sidebar items
+				sidebar.querySelectorAll('tp-yt-paper-item').forEach(item => {
+					item.setAttribute('aria-selected', 'false');
+					item.setAttribute('tabindex', '-1');
+					item.classList.remove('iron-selected');
+				});
+				tabItemOuter.setAttribute('aria-selected', 'true');
+				tabItemOuter.setAttribute('tabindex', '0');
+				tabItemOuter.classList.add('iron-selected');
+				mainViewItems.style.display = 'none';
+				ytmHideContainer.style.display = 'block';
+			});
+			// Also handle clicks on other sidebar items to revert view
+			sidebar.querySelectorAll('tp-yt-paper-item').forEach(item => {
+				if (item !== tabItemOuter) {
+					item.addEventListener('click', () => {
+						ytmHideContainer.style.display = 'none';
+						mainViewItems.style.display = 'block';
+					});
+				}
+				tabItemOuter.classList.remove('iron-selected');
+			});
+		}
 		// Get settings main view
 		const mainView = settingsRoot.querySelector('ytmusic-setting-category-collection-renderer');
 		const mainViewItems = settingsRoot.querySelector('ytmusic-setting-category-collection-renderer .items');
@@ -242,31 +274,6 @@
 
 		fillBlocklistUI();
 		restoreLog();
-
-		// sidebar button listener
-		tabItemOuter.addEventListener('click', () => {
-			// unselect other sidebar items
-			sidebar.querySelectorAll('tp-yt-paper-item').forEach(item => {
-				item.setAttribute('aria-selected', 'false');
-				item.setAttribute('tabindex', '-1');
-				item.classList.remove('iron-selected');
-			});
-			tabItemOuter.setAttribute('aria-selected', 'true');
-			tabItemOuter.setAttribute('tabindex', '0');
-			tabItemOuter.classList.add('iron-selected');
-			mainViewItems.style.display = 'none';
-			ytmHideContainer.style.display = 'block';
-		});
-		// Also handle clicks on other sidebar items to revert view
-		sidebar.querySelectorAll('tp-yt-paper-item').forEach(item => {
-			if (item !== tabItemOuter) {
-				item.addEventListener('click', () => {
-					ytmHideContainer.style.display = 'none';
-					mainViewItems.style.display = 'block';
-				});
-			}
-			tabItemOuter.classList.remove('iron-selected');
-		});
 	}
 
 	document.addEventListener('iron-overlay-opened', async (e) => {
